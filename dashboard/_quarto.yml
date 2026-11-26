@@ -1,0 +1,28 @@
+project:
+  type: website
+
+website:
+  title: "Education and Health in East & Southeast Asia"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+
+      - href: dataset_intro.qmd
+        text: Dataset Intro
+
+      - href: q1.qmd
+        text: Question 1
+
+      - href: q2.qmd
+        text: Question 2
+
+      - href: q3.qmd
+        text: Question 3
+
+      - href: q4.qmd
+        text: Question 4
+
+format:
+  html:
+    theme: cosmo
