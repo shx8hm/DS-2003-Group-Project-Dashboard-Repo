@@ -15,7 +15,10 @@ website:
         text: Question 1
 
       - href: q2.qmd
-        text: Question 2
+        text: Question 2 - Edu / Health
+
+      - href: q2_TESTING.qmd
+        text: Q2 TESTING
 
       - href: q3.qmd
         text: Question 3

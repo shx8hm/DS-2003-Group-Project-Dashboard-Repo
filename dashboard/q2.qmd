@@ -1,3 +1,149 @@
+<!-- SECTION 0: Title and Configurations ('shiny' means, allow real-time interaction via 'Reactive Inputs') -->
 ---
-title: Question 2
+title: "Question 2"
+server: shiny
 ---
+
+<!-- Import shiny (interacive UI widget library; replaces ipywidgets in mockup) -->
+```{python}
+from shiny import reactive
+from shiny.express import ui
+```
+
+
+
+<!-- 1. Pre-compute axis_ranges of all relevant data -->
+## 1. Pre-compute axis_ranges of all relevant data
+```{python}
+import pandas as pd
+from dashboard_helpers import *     # contains helper functions, and lists of education_vars / health_vars
+```
+
+```{python}
+# 1. Read data (cleaned data)
+df = pd.read_csv(
+    "../data/clean/panel_1980_2010.csv"
+)
+
+# 2. Compute axis ranges for all attributes (static; doesn't depend on UI input)
+axis_ranges = compute_axis_ranges(
+    df=df,
+    x_vars=education_vars, 
+    y_vars=health_vars,
+)
+```
+
+
+
+
+## 2. Create sidebar controls
+<!-- Begin sidebar -->
+::: {.sidebar}      
+
+<!-- Year slider -->
+```{python}
+ui.input_slider(
+    "year", 
+    "Year", 
+    min=1980, 
+    max=2019, 
+    value=2000      # default value = 2000
+)
+```
+
+<!-- Education metric (x) -->
+```{python}
+ui.input_select(
+    "x_var",
+    "Education Metric (x)",
+    choices=education_vars,
+    selected="secondary_enrollment"     # default value
+)
+```
+
+<!-- Health metric (y) -->
+```{python}
+ui.input_select(
+    "y_var",
+    "Health Outcome (y)",
+    choices=health_vars,
+    selected="under5_mortality"     # default value
+)
+```
+
+<!-- Region filter -->
+```{python}
+ui.input_checkbox_group(
+    "regions",
+    "Region",
+    choices=[
+        "East Asia",
+        "Southeast Asia"
+    ],
+    selected=[
+        "East Asia",
+        "Southeast Asia"
+    ]
+)
+```
+
+<!-- Color-encoding toggle (by region / by income-level) -->
+```{python}
+ui.input_radio_buttons(
+    "color_var",
+    "Color Encoding",
+    choices=[
+        "region",
+        "income"
+    ],
+    selected="region"
+)
+```
+
+:::
+<!-- Close (end) sidebar -->
+
+
+
+
+## 3. Interactivity: Create reactive filtered data (i.e., data that is filtered dynamically based on the UI inputs' values)
+```{python}
+# Filter displayed-data dynamically, based on the UI inputs' values. (interactivity)
+
+@reactive.calc  # when UI-input-values are changed, re-filter the displayed-data accordingly. 
+def filtered():
+    # invoke dashboard_helpers.filter_data(...) 
+    #   a helper function in dashboard_helpers.py
+
+    return filter_data(
+        df,
+        year=input.year(),
+        include_east="East Asia" in input.regions(),
+        include_southeast="Southeast Asia" in input.regions(),
+    )
+
+```
+
+
+
+
+## 4. Render scatterplot using render_plotly
+```{python}
+from shinywidgets import render_plotly
+```
+
+```{python}
+@render_plotly
+def scatterplot():
+    # What this does: auto-render the scatterplot on-the-fly, instead of using a fixed make_plot function. 
+    fig = create_scatterplot(
+        filtered(),     # filter for only records that match year and region
+        input.x_var(),
+        input.y_var(),
+        input.color_var(),
+        input.year(),
+        axis_ranges,    # precomputed at the top of this file, q2.qmd
+    )
+
+    return fig          # NOTE: quarto auto-renders this!
+```

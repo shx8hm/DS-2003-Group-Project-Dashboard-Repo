@@ -1,0 +1,74 @@
+---
+title: Question 2 TESTING
+---
+
+
+
+<!-- Test 01: Does Python render (PASS 11:10 11-26) -->
+## Test 01: Does Python render (PASS 11:10 11-26)
+```{python}
+print("hello dashboard")
+```
+
+
+
+<!-- Test 02: Does Plotly render (PASS 11:14 11-26) -->
+## Test 02: Does Plotly render (PASS)
+```{python}
+import plotly.express as px
+
+fig = px.scatter(
+    x=[1, 2, 3],
+    y=[4, 5, 6],
+)
+
+fig.show()
+```
+
+
+
+
+<!-- TEST 3: Before introducing UI controls, does create_scatterplot() (called once as a test) render? -->
+## TEST 3: Development Test - does create_scatterplot render in Quarto? (w/ hard-coded x, y vars, region, and year)
+```{python}
+import pandas as pd
+
+from dashboard_helpers import *
+```
+
+```{python}
+# 1. Read data (cleaned data)
+df = pd.read_csv(
+    "../data/clean/panel_1980_2010.csv"
+)
+
+# 2. Compute axis ranges for all attributes (static; doesn't depend on UI input)
+axis_ranges = compute_axis_ranges(
+    df=df,
+    x_vars=education_vars, 
+    y_vars=health_vars,
+)
+```
+
+```{python}
+# 3. Filter data based on hard-coded year, x-var, y-var, and region
+filtered_df = filter_data(
+    df, 
+    year=2000,
+    include_east=True,
+    include_southeast=True,
+)
+
+# 4. Display hard-coded static scatterplot as a test
+fig = create_scatterplot(
+    filtered_df,
+    "secondary_enrollment",
+    "under5_mortality",
+    "region",
+    2000,
+    axis_ranges
+)
+
+# IMPORTANT: in Quarto, a fig at the bottom of a '[Python] cell' auto-renders
+fig         # NOT fig.show()
+```
