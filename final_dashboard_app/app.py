@@ -1,3 +1,5 @@
+# TODO: Add any imports needed here
+
 from shiny import App, ui, reactive
 from shinywidgets import (
     render_plotly,
@@ -8,14 +10,34 @@ from shinywidgets import (
 
 
 # ============================================================================
-# PART 1: GLOBAL STATE (not dep. on user input)
-#   Import helper functions, read data, compute axis ranges (of individual attributes)
+# PART 1: GLOBAL STATE (data and helper-functions: for each section/question)
+#   1. Read data
+#   2. For each question - Import helper functions,  compute axis ranges (of individual attributes)
 # ============================================================================
 
-import pandas as pd
 
-# 1.1. Global state: Import helper functions
-from dashboard_helpers import (
+import pandas as pd
+# A. Global state: read data (shared across all sections) ONCE, at the beginning.  
+df = pd.read_csv(
+    "data/panel_1980_2010.csv"
+)
+
+
+
+# B. Setup each question's state, as necessary
+#   (e.g., helper functions, column ranges, etc.)
+
+"""
+Q1 State SETUP
+"""
+
+
+
+"""
+Q2 State SETUP
+"""
+# Q2 state: Import helper functions
+from Q2_dashboard_helpers import (
     education_vars,
     health_vars,
     filter_data,
@@ -23,12 +45,7 @@ from dashboard_helpers import (
     create_scatterplot
 )
 
-# 1.2. Global state: read data
-df = pd.read_csv(
-    "data/panel_1980_2010.csv"
-)
-
-# 1.3. Global state:  Compute ranges for each variable (keep plotting consistent)
+# Q2 state:  Compute ranges for each variable (keep plotting consistent)
 axis_ranges = compute_axis_ranges(
     df=df,
     x_vars=education_vars,
@@ -37,9 +54,21 @@ axis_ranges = compute_axis_ranges(
 
 
 
+"""
+Q3 State SETUP
+"""
+
+
+
+"""
+Q4 State SETUP
+"""
+
+
+
 
 # ============================================================================
-# PART 2: Dashboard Structure (tabbed between About, Q1, Q2, Q3, Q4)
+# PART 2: Dashboard Structure (tabbed between: About, Q1, Q2, Q3, Q4)
 # ============================================================================
 app_ui = ui.page_navbar(
 
@@ -51,7 +80,7 @@ app_ui = ui.page_navbar(
         "About",
 
         ui.h2(
-            "Education and Health in East & Southeast Asia"
+            "Development in East and Southeast Asia, 1980-2019"
         ),
 
         ui.p(
@@ -81,7 +110,7 @@ app_ui = ui.page_navbar(
 
     ui.nav_panel(
 
-        "Q2",
+        "Q2 - Education and Health",
 
         ui.layout_sidebar(
 
@@ -140,7 +169,7 @@ app_ui = ui.page_navbar(
                 ),
 
                 ui.div(
-                    output_widget("scatterplot"),
+                    output_widget("Q2_scatterplot"),
                     style="max-width:1200px; margin:auto;"
                 )
             )
@@ -152,7 +181,7 @@ app_ui = ui.page_navbar(
     # ============================================================
 
     ui.nav_panel(
-        "Q3",
+        "Q3 - Sanitation and Health",
 
         ui.h3("Question 3"),
 
@@ -164,52 +193,81 @@ app_ui = ui.page_navbar(
     # ============================================================
 
     ui.nav_panel(
-        "Q4",
+        "Q4 - Econ. and Health",
 
         ui.h3("Question 4"),
 
         ui.p("Notebook integration pending.")
     ),
 
-    title="Education & Health Dashboard (E/SE Asia; 1980-2019)"
+    title="Dashboard (E/SE Asia Development; 1980-2019)"
 )
 
 
 
 
-
+# ============================================================================
+# PART 3: Dynamic RENDER LOGIC (for Q1, Q2, Q3, and Q4) -
+#   Only for pages with interactive visualizations
+# ============================================================================
 def server(input, output, session):
+    """
+    QUESTION 1 (dynamic) RENDER LOGIC
+    """
+    # TODO
 
-    # 1. FILTER DATA: when UI-input-values are changed, re-filter the displayed-data accordingly. 
+    
+
+    """
+    QUESTION 2 (dynamic) RENDER LOGIC
+    """
+    # Q2.1. FILTER DATA: when UI-input-values are changed, re-filter the displayed-data accordingly. 
     @reactive.calc  
-    def filtered():
+    def filtered_data_by_year_region():     # NOTE: This filter() function may be used across Q2-Q4. 
         # invoke dashboard_helpers.filter_data(...) 
-        #   a helper function in dashboard_helpers.py
-
+        #   a helper function in Q2_dashboard_helpers.py
         return filter_data(
             df,
             year=input.year(),
             include_east="East Asia" in input.regions(),
             include_southeast="Southeast Asia" in input.regions(),
         )
-
-    # 2. DISPLAY SCATTER: Render the scatterplot (perhaps again, when the UI values changed)
+    
+    # Q2.2. DISPLAY SCATTER: Render the scatterplot (perhaps again, when the UI values changed)
     @render_plotly
-    def scatterplot():
-
+    def Q2_scatterplot():
         fig = create_scatterplot(
-            filtered(),
+            filtered_data_by_year_region(),
             input.x_var(),
             input.y_var(),
             input.color_var(),
             input.year(),
             axis_ranges,
         )
-
         return fig
 
 
 
 
+    """
+    QUESTION 3 (dynamic) RENDER LOGIC
+    """
+    # TODO
 
+
+
+
+    """
+    # QUESTION 4 (dynamic) RENDER LOGIC
+    """
+    # TODO
+
+
+
+
+
+
+# ============================================================================
+# PART 4: Run the app (do NOT change this!)
+# ============================================================================
 app = App(app_ui, server)

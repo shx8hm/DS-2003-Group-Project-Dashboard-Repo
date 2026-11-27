@@ -4,6 +4,8 @@ dashboard_helpers.py (dashboard/dashboard_helpers.py)
 This file contains:
 1. the data logic (filter_data, trendlines, correlation, coverage) 
 2. plot creation (create_scatterplot)
+
+** for Q2 (Education and Health Outcomes) of the Project **
 """
 
 
