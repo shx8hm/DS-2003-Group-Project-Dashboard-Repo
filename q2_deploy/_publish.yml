@@ -1,0 +1,4 @@
+- source: q2.qmd
+  posit-connect-cloud:
+    - id: 01a219df-d5d3-33db-3bfe-6f82803ce313
+      url: https://connect.posit.cloud/shx8hm/content/01a219df-d5d3-33db-3bfe-6f82803ce313
