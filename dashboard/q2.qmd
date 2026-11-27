@@ -22,7 +22,7 @@ from dashboard_helpers import *     # contains helper functions, and lists of ed
 ```{python}
 # 1. Read data (cleaned data)
 df = pd.read_csv(
-    "../data/clean/panel_1980_2010.csv"
+    "data/panel_1980_2010.csv"
 )
 
 # 2. Compute axis ranges for all attributes (static; doesn't depend on UI input)

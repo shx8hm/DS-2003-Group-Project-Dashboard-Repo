@@ -1,0 +1,12 @@
+{
+    "https://api.connect.posit.cloud/v1#01a21982-c740-7289-36a8-27206e69a4fc": {
+        "server_url": "https://api.connect.posit.cloud/v1#01a21982-c740-7289-36a8-27206e69a4fc",
+        "filename": "C:\\dev\\fall-2026\\DS-2003-Folder\\project_2\\final_dashboard_app",
+        "app_url": "https://connect.posit.cloud/shx8hm/content/01a21af1-7952-3af1-e320-1ddbde834ee7",
+        "app_id": "01a21af1-7952-3af1-e320-1ddbde834ee7",
+        "app_guid": null,
+        "title": "DS2003-Dashboard",
+        "app_mode": "python-shiny",
+        "app_store_version": 1
+    }
+}
